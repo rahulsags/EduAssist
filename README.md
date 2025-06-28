@@ -36,8 +36,8 @@ EduAssist is a comprehensive personalized learning platform that leverages AI to
 
 ### Demo Credentials
 Use these credentials to test the application immediately:
-- **Email**: `demo@student.com`
-- **Password**: `eduhack2025`
+- **Email**: `user@example.com`
+- **Password**: `user@123`
 
 ### Environment Setup
 
@@ -230,19 +230,33 @@ The platform offers structured learning experiences through:
 
 ## 🚀 Deployment
 
-### Vercel Deployment (Recommended)
-1. Push code to GitHub repository
-2. Connect repository to Vercel
-3. Add environment variables in Vercel dashboard
-4. Deploy automatically on push
+### Deploying to Vercel
 
-### Environment Variables for Production
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_production_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_production_supabase_anon_key
-GROQ_API_KEY=your_groq_api_key
-OPENAI_API_KEY=your_openai_api_key
-```
+1. **Fork or Clone the Repository**
+   - Create your own copy of the repository
+
+2. **Set Up Environment Variables on Vercel**
+   - In your Vercel project settings, add the following environment variables:
+     - `NEXT_PUBLIC_SUPABASE_URL`: Your Supabase project URL
+     - `NEXT_PUBLIC_SUPABASE_ANON_KEY`: Your Supabase anonymous key
+     - Any other environment variables from .env.example
+
+3. **Deploy to Vercel**
+   - Connect your GitHub repository to Vercel
+   - Configure the build settings:
+     - Framework: Next.js
+     - Build Command: `next build`
+     - Output Directory: `.next`
+   - Deploy!
+
+4. **Setup Supabase Tables**
+   - Run the migration files in the `supabase/migrations` folder against your Supabase instance
+   - Alternatively, manually create the tables based on the migration files
+
+5. **Test Your Deployment**
+   - Navigate to your deployed application URL
+   - Test the user authentication using the demo credentials
+   - Verify that all features are working as expected
 
 ## 🧪 Testing
 
@@ -291,7 +305,7 @@ This application is fully configured for hackathon submission with:
 ## 📞 Support
 
 For questions or issues:
-1. Check the demo credentials: `demo@student.com` / `eduhack2025`
+1. Check the demo credentials
 2. Verify environment variables are set correctly
 3. Ensure Supabase project is configured
 4. Check browser console for any errors

@@ -61,9 +61,9 @@ export default function AuthPage() {
 
   const fillDemoCredentials = () => {
     setFormData({
-      email: 'demo@student.com',
-      password: 'eduhack2025',
-      fullName: 'Demo Student'
+      email: 'user@example.com',
+      password: 'user@123',
+      fullName: 'User'
     })
   }
 
@@ -211,7 +211,7 @@ export default function AuthPage() {
                 Use Demo Credentials
               </Button>
               <p className="text-xs text-gray-500 text-center mt-2">
-                Email: demo@student.com | Password: eduhack2025
+                For demo purposes. Sign in instantly with preset credentials.
               </p>
             </div>
           </CardContent>

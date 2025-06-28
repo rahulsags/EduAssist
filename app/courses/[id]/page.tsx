@@ -64,133 +64,210 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
     const fetchCourse = async () => {
       setLoading(true)
       try {
-        // In a real app, fetch from Supabase based on course ID
-        // For now, use mock data
-        const mockCourse: CourseDetail = {
-          id: params.id,
-          title: params.id === 'c1' ? 'JavaScript Fundamentals' : 
-                 params.id === 'c2' ? 'React.js: Zero to Hero' :
-                 params.id === 'c3' ? 'Python for Data Science' :
-                 'Course ' + params.id,
-          description: 'This comprehensive course will take you through all the essential concepts you need to become proficient. Starting with the basics and building up to advanced topics, you\'ll gain hands-on experience through practical examples and exercises.',
-          level: 'Intermediate',
-          category: 'Web Development',
-          instructor: 'Alex Johnson',
-          duration: '4 weeks',
-          modules: [
-            {
-              id: 'm1',
-              title: 'Introduction and Setup',
-              description: 'Get started with the basics and set up your development environment',
-              completed: true,
-              units: [
-                {
-                  id: 'u1',
-                  title: 'Welcome to the Course',
-                  type: 'video',
-                  duration: '5 min',
-                  completed: true
-                },
-                {
-                  id: 'u2',
-                  title: 'Setting Up Your Environment',
-                  type: 'article',
-                  duration: '10 min',
-                  completed: true
-                },
-                {
-                  id: 'u3',
-                  title: 'First Steps Quiz',
-                  type: 'quiz',
-                  duration: '5 min',
-                  completed: true
-                }
-              ]
-            },
-            {
-              id: 'm2',
-              title: 'Core Concepts',
-              description: 'Learn the fundamental concepts that form the foundation',
-              completed: false,
-              units: [
-                {
-                  id: 'u4',
-                  title: 'Understanding the Basics',
-                  type: 'video',
-                  duration: '15 min',
-                  completed: true
-                },
-                {
-                  id: 'u5',
-                  title: 'Working with Data',
-                  type: 'article',
-                  duration: '12 min',
-                  completed: false
-                },
-                {
-                  id: 'u6',
-                  title: 'Practice Exercise',
-                  type: 'exercise',
-                  duration: '20 min',
-                  completed: false
-                },
-                {
-                  id: 'u7',
-                  title: 'Core Concepts Quiz',
-                  type: 'quiz',
-                  duration: '10 min',
-                  completed: false
-                }
-              ]
-            },
-            {
-              id: 'm3',
-              title: 'Advanced Techniques',
-              description: 'Take your skills to the next level with advanced concepts',
-              completed: false,
-              units: [
-                {
-                  id: 'u8',
-                  title: 'Advanced Topic 1',
-                  type: 'video',
-                  duration: '20 min',
-                  locked: true
-                },
-                {
-                  id: 'u9',
-                  title: 'Advanced Topic 2',
-                  type: 'article',
-                  duration: '15 min',
-                  locked: true
-                },
-                {
-                  id: 'u10',
-                  title: 'Advanced Exercise',
-                  type: 'exercise',
-                  duration: '30 min',
-                  locked: true
-                }
-              ]
-            }
-          ],
-          progress: 35
+        // Try to fetch from Supabase first
+        let courseData = null
+        
+        if (user) {
+          const { data, error } = await supabase
+            .from('courses')
+            .select('*')
+            .eq('id', params.id)
+            .single()
+            
+          if (data && !error) {
+            courseData = data
+          }
+        }
+        
+        // If no data from Supabase, use mock data based on ID
+        if (!courseData) {
+          // Create a mapping of course titles based on course IDs
+          const courseTitles: Record<string, string> = {
+            'c1': 'JavaScript Fundamentals',
+            'c2': 'React.js: Zero to Hero',
+            'c3': 'Python for Data Science',
+            'c4': 'Advanced CSS Techniques',
+            'c5': 'Full Stack Development with MERN',
+            // Add any other course IDs here
+          }
+          
+          // Get the appropriate title or use a default
+          const courseTitle = courseTitles[params.id] || `Course ${params.id}`
+          
+          // Get the appropriate category and level based on the course ID
+          let courseCategory = 'Web Development'
+          let courseLevel = 'Intermediate'
+          
+          if (params.id === 'c3') {
+            courseCategory = 'Data Science'
+            courseLevel = 'Beginner'
+          } else if (params.id === 'c5') {
+            courseLevel = 'Advanced'
+          }
+
+          const mockCourse: CourseDetail = {
+            id: params.id,
+            title: courseTitle,
+            description: 'This comprehensive course will take you through all the essential concepts you need to become proficient. Starting with the basics and building up to advanced topics, you\'ll gain hands-on experience through practical examples and exercises.',
+            level: courseLevel,
+            category: courseCategory,
+            instructor: 'Alex Johnson',
+            duration: '4 weeks',
+            modules: [
+              {
+                id: 'm1',
+                title: 'Introduction and Setup',
+                description: 'Get started with the basics and set up your development environment',
+                completed: false,
+                units: [
+                  {
+                    id: 'u1',
+                    title: 'Welcome to the Course',
+                    type: 'video',
+                    duration: '5 min',
+                    completed: false
+                  },
+                  {
+                    id: 'u2',
+                    title: 'Setting Up Your Environment',
+                    type: 'article',
+                    duration: '10 min',
+                    completed: false
+                  },
+                  {
+                    id: 'u3',
+                    title: 'First Steps Quiz',
+                    type: 'quiz',
+                    duration: '5 min',
+                    completed: false
+                  }
+                ]
+              },
+              {
+                id: 'm2',
+                title: 'Core Concepts',
+                description: 'Learn the fundamental concepts that form the foundation',
+                completed: false,
+                units: [
+                  {
+                    id: 'u4',
+                    title: 'Understanding the Basics',
+                    type: 'video',
+                    duration: '15 min',
+                    completed: true
+                  },
+                  {
+                    id: 'u5',
+                    title: 'Working with Data',
+                    type: 'article',
+                    duration: '12 min',
+                    completed: false
+                  },
+                  {
+                    id: 'u6',
+                    title: 'Practice Exercise',
+                    type: 'exercise',
+                    duration: '20 min',
+                    completed: false
+                  },
+                  {
+                    id: 'u7',
+                    title: 'Core Concepts Quiz',
+                    type: 'quiz',
+                    duration: '10 min',
+                    completed: false
+                  }
+                ]
+              },
+              {
+                id: 'm3',
+                title: 'Advanced Techniques',
+                description: 'Take your skills to the next level with advanced concepts',
+                completed: false,
+                units: [
+                  {
+                    id: 'u8',
+                    title: 'Advanced Topic 1',
+                    type: 'video',
+                    duration: '20 min',
+                    locked: true
+                  },
+                  {
+                    id: 'u9',
+                    title: 'Advanced Topic 2',
+                    type: 'article',
+                    duration: '15 min',
+                    locked: true
+                  },
+                  {
+                    id: 'u10',
+                    title: 'Advanced Exercise',
+                    type: 'exercise',
+                    duration: '30 min',
+                    locked: true
+                  }
+                ]
+              }
+            ],
+            progress: 0
+          }
+          
+          courseData = mockCourse
         }
 
         // Try to fetch user progress from Supabase
         if (user) {
-          const { data: progressData, error: progressError } = await supabase
-            .from('user_progress')
-            .select('*')
-            .eq('user_id', user.id)
-            .eq('content_id', params.id)
-            .single()
+          try {
+            const { data: progressData, error: progressError } = await supabase
+              .from('user_progress')
+              .select('*')
+              .eq('user_id', user.id)
+              .eq('content_id', params.id)
+              .eq('content_type', 'course')
+              .single()
 
-          if (progressData && !progressError) {
-            mockCourse.progress = progressData.progress
+            if (progressData && !progressError) {
+              courseData.progress = progressData.progress
+            }
+            
+            // Also fetch unit completions
+            const { data: unitProgressData, error: unitError } = await supabase
+              .from('user_progress')
+              .select('*')
+              .eq('user_id', user.id)
+              .like('content_id', `${params.id}-%`)
+              .eq('content_type', 'course_unit')
+            
+            if (unitProgressData && !unitError) {
+              // Update units and modules completion status
+              unitProgressData.forEach(progress => {
+                const [_, moduleId, unitId] = progress.content_id.split('-')
+                
+                courseData.modules.forEach((module: Module) => {
+                  if (module.id === moduleId) {
+                    module.units.forEach((unit: { id: string; completed?: boolean; locked?: boolean }) => {
+                      if (unit.id === unitId) {
+                        unit.completed = true
+                      }
+                    })
+                    
+                    // Check if all units are completed
+                    const allUnitsCompleted = module.units.every((unit: { completed?: boolean; locked?: boolean }) => 
+                      unit.completed || unit.locked
+                    )
+                    if (allUnitsCompleted) {
+                      module.completed = true
+                    }
+                  }
+                })
+              })
+            }
+          } catch (err) {
+            console.error('Error fetching progress:', err)
           }
         }
 
-        setCourse(mockCourse)
+        setCourse(courseData)
       } catch (error) {
         console.error('Error fetching course:', error)
         toast.error('Failed to load course')

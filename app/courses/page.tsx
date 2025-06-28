@@ -37,7 +37,7 @@ interface Course {
   imageUrl: string;
   duration: string;
   modules: number;
-  progress?: number;
+  progress: number; // Changed from optional to required with a default value
 }
 
 interface RoadmapStep {
@@ -60,8 +60,10 @@ interface Roadmap {
   level: 'Beginner' | 'Intermediate' | 'Advanced';
   category: string;
   steps: RoadmapStep[];
-  progress?: number;
+  progress: number;
 }
+
+import { ErrorBoundary } from '@/components/ErrorBoundary'
 
 export default function CoursesPage() {
   const { user } = useAuth()
@@ -158,6 +160,50 @@ export default function CoursesPage() {
             imageUrl: 'https://images.unsplash.com/photo-1533417379241-6e2536f5af5d',
             duration: '5 weeks',
             modules: 14,
+            progress: 0
+          },
+          {
+            id: 'c7',
+            title: 'Introduction to Machine Learning',
+            description: 'Understand the basics of machine learning and build your first model.',
+            level: 'Beginner',
+            category: 'Data Science',
+            imageUrl: 'https://images.unsplash.com/photo-1584697964151-151f3a607a2d',
+            duration: '4 weeks',
+            modules: 10,
+            progress: 0
+          },
+          {
+            id: 'c8',
+            title: 'Docker for Beginners',
+            description: 'Learn containerization and orchestration using Docker and Kubernetes.',
+            level: 'Intermediate',
+            category: 'DevOps',
+            imageUrl: 'https://images.unsplash.com/photo-1593642635271-8b4b6f8f8a2f',
+            duration: '3 weeks',
+            modules: 8,
+            progress: 0
+          },
+          {
+            id: 'c9',
+            title: 'AWS Cloud Practitioner Essentials',
+            description: 'Get started with Amazon Web Services and cloud computing fundamentals.',
+            level: 'Beginner',
+            category: 'Cloud Computing',
+            imageUrl: 'https://images.unsplash.com/photo-1584697964151-151f3a607a2d',
+            duration: '2 weeks',
+            modules: 6,
+            progress: 0
+          },
+          {
+            id: 'c10',
+            title: 'UI/UX Design Bootcamp',
+            description: 'From user research to prototyping, learn the essentials of UI/UX design.',
+            level: 'Advanced',
+            category: 'UI/UX Design',
+            imageUrl: 'https://images.unsplash.com/photo-1584697964151-151f3a607a2d',
+            duration: '5 weeks',
+            modules: 12,
             progress: 0
           }
         ]
@@ -309,10 +355,14 @@ export default function CoursesPage() {
         }
 
         // Apply user progress to courses and roadmaps
-        const finalCourses = mockCourses.map(course => ({
-          ...course,
-          progress: userProgressData[course.id] || 0
-        }))
+        const finalCourses = mockCourses.map(course => {
+          // Ensure progress is never undefined to fix build errors
+          const progress = userProgressData[course.id] ?? 0;
+          return {
+            ...course,
+            progress
+          }
+        })
         
         const finalRoadmaps = mockRoadmaps.map(roadmap => {
           // Calculate overall roadmap progress based on completed steps
@@ -438,6 +488,11 @@ export default function CoursesPage() {
 
   // Filter courses based on category and level
   const filteredCourses = courses.filter(course => {
+    // Ensure progress is always defined
+    if (course.progress === undefined) {
+      course.progress = 0;
+    }
+    
     return (
       (categoryFilter === 'all' || course.category === categoryFilter) &&
       (levelFilter === 'all' || course.level === levelFilter)
@@ -446,6 +501,11 @@ export default function CoursesPage() {
 
   // Filter roadmaps based on category and level
   const filteredRoadmaps = roadmaps.filter(roadmap => {
+    // Ensure progress is always defined
+    if (roadmap.progress === undefined) {
+      roadmap.progress = 0;
+    }
+    
     return (
       (categoryFilter === 'all' || roadmap.category === categoryFilter) &&
       (levelFilter === 'all' || roadmap.level === levelFilter)
@@ -467,8 +527,9 @@ export default function CoursesPage() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-        <Navbar />
+      <ErrorBoundary>
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+          <Navbar />
         
         <div className="container mx-auto px-4 py-8">
           <div className="mb-8">
@@ -571,22 +632,20 @@ export default function CoursesPage() {
                           </div>
                         </div>
                         
-                        {course.progress > 0 ? (
-                          <div className="space-y-2">
-                            <div className="flex items-center justify-between">
-                              <span className="text-sm font-medium">Progress</span>
-                              <span className="text-sm font-medium">{course.progress}%</span>
-                            </div>
-                            <Progress value={course.progress} className="h-2" />
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium">Progress</span>
+                            <span className="text-sm font-medium">{course.progress ?? 0}%</span>
                           </div>
-                        ) : null}
+                          <Progress value={course.progress ?? 0} className="h-2" />
+                        </div>
                       </CardContent>
                       <CardFooter>
                         <Button 
                           className="w-full bg-blue-600 hover:bg-blue-700"
                           onClick={() => enrollInCourse(course.id)}
                         >
-                          {course.progress > 0 ? 'Continue Learning' : 'Start Course'}
+                          {(course.progress ?? 0) > 0 ? 'Continue Learning' : 'Start Course'}
                           <ArrowRight className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>
@@ -635,9 +694,9 @@ export default function CoursesPage() {
                         <div className="mt-4 space-y-2">
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium">Overall Progress</span>
-                            <span className="text-sm font-medium">{roadmap.progress}%</span>
+                            <span className="text-sm font-medium">{roadmap.progress ?? 0}%</span>
                           </div>
-                          <Progress value={roadmap.progress} className="h-2" />
+                          <Progress value={roadmap.progress ?? 0} className="h-2" />
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-6">
@@ -719,6 +778,7 @@ export default function CoursesPage() {
           </Tabs>
         </div>
       </div>
+      </ErrorBoundary>
     </ProtectedRoute>
   )
 }
