@@ -5,7 +5,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+// Progress import removed to fix build issues
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
@@ -25,6 +25,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
+import SimpleProgress from '@/components/ui/simple-progress'
 
 interface Module {
   id: string;
@@ -350,7 +351,7 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
             user_id: user.id,
             content_id: course.id,
             content_type: 'course',
-            progress: updatedCourse.progress,
+            progress: updatedCourse.progress || 0,
             updated_at: new Date().toISOString()
           }
         ])
@@ -452,16 +453,16 @@ export default function CourseDetailPage({ params }: { params: { id: string } })
                 </div>
               </div>
               <div className="flex items-center space-x-2">
-                {course.progress === 100 ? (
+                {(course.progress || 0) === 100 ? (
                   <Badge className="bg-green-100 text-green-800 px-3 py-1">
                     <CheckCircle className="h-4 w-4 mr-1" />
                     Completed
                   </Badge>
                 ) : (
                   <>
-                    <span className="font-medium">{course.progress}%</span>
+                    <span className="font-medium">{course.progress || 0}%</span>
                     <div className="w-40 md:w-64">
-                      <Progress value={course.progress} className="h-2" />
+                      <SimpleProgress value={course.progress || 0} className="h-2" />
                     </div>
                   </>
                 )}

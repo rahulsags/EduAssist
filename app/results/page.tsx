@@ -6,7 +6,8 @@ import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
+// Progress import removed to fix build issues
+import SimpleProgress from '@/components/ui/simple-progress'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from 'recharts'
 import { TrendingUp, Calendar, Trophy, Target, BookOpen, ArrowRight } from 'lucide-react'
 import { useRouter } from 'next/navigation'
@@ -357,7 +358,7 @@ export default function ResultsPage() {
                           }`}>
                             {percentage}%
                           </div>
-                          <Progress value={percentage} className="w-20 h-2" />
+                          <SimpleProgress value={percentage} className="w-20 h-2" />
                         </div>
                       </div>
                     </div>
