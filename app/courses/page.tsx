@@ -5,7 +5,7 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+// Progress import removed to fix build issues
 import { Badge } from '@/components/ui/badge'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
@@ -27,6 +27,7 @@ import { useRouter } from 'next/navigation'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
 import { toast } from 'sonner'
+import SimpleProgress from '@/components/ui/simple-progress'
 
 interface Course {
   id: string;
@@ -637,7 +638,7 @@ export default function CoursesPage() {
                             <span className="text-sm font-medium">Progress</span>
                             <span className="text-sm font-medium">{course.progress ?? 0}%</span>
                           </div>
-                          <Progress value={course.progress ?? 0} className="h-2" />
+                          <SimpleProgress value={course.progress ?? 0} className="h-2" />
                         </div>
                       </CardContent>
                       <CardFooter>
@@ -696,7 +697,7 @@ export default function CoursesPage() {
                             <span className="text-sm font-medium">Overall Progress</span>
                             <span className="text-sm font-medium">{roadmap.progress ?? 0}%</span>
                           </div>
-                          <Progress value={roadmap.progress ?? 0} className="h-2" />
+                          <SimpleProgress value={roadmap.progress ?? 0} className="h-2" />
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-6">

@@ -5,8 +5,9 @@ import { ProtectedRoute } from '@/components/ProtectedRoute'
 import { Navbar } from '@/components/Navbar'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Progress } from '@/components/ui/progress'
+// Progress import removed to fix build issues
 import { Badge } from '@/components/ui/badge'
+import SimpleProgress from '@/components/ui/simple-progress'
 import { 
   Brain, 
   BookOpen, 
@@ -372,7 +373,7 @@ export default function Dashboard() {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{stats.weeklyProgress}%</div>
-                <Progress value={stats.weeklyProgress} className="mt-2" />
+                <SimpleProgress value={stats.weeklyProgress} className="mt-2" />
               </CardContent>
             </Card>
           </div>
@@ -558,7 +559,7 @@ export default function Dashboard() {
                       </Badge>
                     </div>
                     <div className="space-y-2">
-                      <Progress value={item.progress} className="h-2" />
+                      <SimpleProgress value={item.progress} className="h-2" />
                       <p className="text-sm text-gray-500">{item.progress}% complete</p>
                     </div>
                   </div>

@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Progress } from '@/components/ui/progress'
+// Progress import removed to fix build issues
 import { Badge } from '@/components/ui/badge'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { BookOpen, Clock, CheckCircle, XCircle, Trophy, ArrowRight, RotateCcw, TrendingUp } from 'lucide-react'
@@ -16,6 +16,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { useAuth } from '@/contexts/AuthContext'
 import { supabase } from '@/lib/supabase'
+import SimpleProgress from '@/components/ui/simple-progress'
 
 interface Question {
   id: string
@@ -465,7 +466,7 @@ export default function QuizPage() {
                   </div>
                 </div>
               </div>
-              <Progress value={progress} className="h-2" />
+              <SimpleProgress value={progress} className="h-2" />
             </div>
 
             {!showResults ? (

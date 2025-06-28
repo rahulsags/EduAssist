@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node deploy.js && next build",
     "build:deploy": "powershell -Command \"Copy-Item -Path tsconfig.build.json -Destination tsconfig.deploy.json -Force; Rename-Item -Path tsconfig.json -NewName tsconfig.original.json -Force; Rename-Item -Path tsconfig.deploy.json -NewName tsconfig.json -Force; npm run build; Rename-Item -Path tsconfig.json -NewName tsconfig.deploy.json -Force; Rename-Item -Path tsconfig.original.json -NewName tsconfig.json -Force\"",
     "start": "next start",
     "lint": "next lint"
